@@ -7,8 +7,26 @@ output:
 
 
 ## Loading and preprocessing the data
+Check for and, if necessary, download files in current working directory
+unzip file if activity.csv doesn't already exist
+```{r, echo = T}
 
+zipfile = "activity.zip"
+# check if zipfile has been download to current working directory
+# if not, download zipfile using method = "curl" for OS X and https
+if(!file.exists(zipfile)) {
+        download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip",
+                      destfile = zipfile,
+                      method = "curl")
+}
 
+filename = "activity.csv"
+# checks if the activity.csv has been unzipped from activity.zip
+# unzips activity.zip if not and creates activity.csv in working directory
+if(!file.exists(filename)) {
+        unzip("activity.zip")
+}
+```
 
 ## What is mean total number of steps taken per day?
 
