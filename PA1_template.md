@@ -1,16 +1,11 @@
----
-Author: Jerad Acosta
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 Check for and, if necessary, download files in current working directory
 unzip file if activity.csv doesn't already exist
-```{r, echo = T}
+
+```r
 # check if zipfile has been download to current working directory
 # if not, download zipfile using method = "curl" for OS X and https
 zipfile = "activity.zip"
@@ -29,7 +24,8 @@ if(!file.exists(filename)) {
 ```
 
 loading csv file into data.frame and preprocess date column for later use
-```{r, echo=TRUE}
+
+```r
 # load data into variable
 active.data <- read.csv("activity.csv")
 
@@ -42,7 +38,8 @@ active.data$date <- as.POSIXct(active.data$date)
 ## What is mean total number of steps taken per day?
 
 1. Make histogram of the total number of steps taken each day
-```{r, echo=T}
+
+```r
 # make a 61 levels for each day by 288 for each time entry factor
 f <- gl(61, 288)
 active.data$dayFactor <- f
@@ -52,7 +49,11 @@ stepsPerDay <- tapply(active.data$steps, active.data$dayFactor, sum)
 
 # plot number of steps per day
 barplot(stepsPerDay, xlab = "Day #", ylab = "# of Steps")
+```
 
+![plot of chunk unnamed-chunk-3](./PA1_template_files/figure-html/unnamed-chunk-3.png) 
+
+```r
 ## save copy of figure in directory
 # check for directory and create if needed
 if(!file.exists("./figure")) {
@@ -62,14 +63,28 @@ if(!file.exists("./figure")) {
 # add a copy of the plot to the figure directory
 dev.copy(png, file = "./figure/StepsTakenEachDay",
          width = 480, height = 480)
+```
+
+```
+## quartz_off_screen 
+##                 3
+```
+
+```r
 dev.off()
+```
+
+```
+## pdf 
+##   2
 ```
 
 2. Calculate the median total number of steps taken per day
 **Absolute Mean** *total steps recorded over 61 days*
 To calculate asbolute mean over 61 day period,
 we take the total number of steps recorded and divide by the 61 days
-```{r, echo=TRUE}
+
+```r
 # number of days in October [31] and November [30]
 totalDays = 61
 
@@ -83,11 +98,16 @@ paste("The absolute mean of recorded steps over the entire",totalDays,
       "peroid is", absMean, sep=" ")
 ```
 
+```
+## [1] "The absolute mean of recorded steps over the entire 61 peroid is 9354.22950819672"
+```
+
 **Relative Mean** *number of steps taken per day in which data exists*
 However,
 Considering that there are some missing days,
 the mean over days which we have data on would be of greater significance
-```{r, echo=TRUE}
+
+```r
 # number of days in October [31] and November [30]
 totalDays = 61
 
@@ -108,6 +128,10 @@ paste("The mean total number of steps taken per day of recorded activity was",
       "days of recorded activity over the 61 days period", sep = " ")
 ```
 
+```
+## [1] "The mean total number of steps taken per day of recorded activity was 10766.1886792453 average steps per day during the 53 days of recorded activity over the 61 days period"
+```
+
 
 ## What is the average daily activity pattern?
 
@@ -115,7 +139,8 @@ TODO Calc max time period
 
 1. Make a time series plot of the 5-minute interval and the average number
 of steps taken, averaged across all days
-```{r, echo=TRUE}
+
+```r
 # create index column of factors for each of the 288 5-minute peroids in a day
 active.data$timeFactor <- c(1:288)
 
@@ -125,7 +150,11 @@ means <- tapply(active.data$steps, active.data$timeFactor, mean, na.rm = TRUE)
 # plot average amount of steps during each of the 288 5-minute intervals
 plot(active.data$interval[1:288], means, type = "l", xlab = "5-minute period",
      ylab = "Average number of Steps (during given period)")
+```
 
+![plot of chunk unnamed-chunk-6](./PA1_template_files/figure-html/unnamed-chunk-6.png) 
+
+```r
 # check for directory and create if needed
 if(!file.exists("./figure")) {
         dir.create("./figure")
@@ -134,13 +163,27 @@ if(!file.exists("./figure")) {
 # add a copy of the plot to the figure directory
 dev.copy(png, file = "./figure/AvgSteps-Over-TimePeriod",
          width = 480, height = 480)
+```
+
+```
+## quartz_off_screen 
+##                 3
+```
+
+```r
 dev.off()
+```
+
+```
+## pdf 
+##   2
 ```
 
 2. Which 5-minute interval, on average across all the days in the dataset,
 contains the maximum number of steps?
 
-```{r, echo=T}
+
+```r
 # one of two ways to calculate the largest average time period
 # is to pull the first index from a reverse ordering
 firstIndx <- order(-means)[1]
@@ -154,6 +197,10 @@ paste("The 5-minute interval with the largest average across all days in the",
       "data set is time period", active.data$interval[secondIndx], sep = " ")
 ```
 
+```
+## [1] "The 5-minute interval with the largest average across all days in the data set is time period 835"
+```
+
 ## Imputing missing values
 
 My *strategy* for filling in the missing or NA values will be
@@ -164,9 +211,7 @@ the same time across different days.
 I attribute this to humans being animals of habit and ritual.
 On average, we maintain our sleeping schedule, working schedule and even regular
 hobbies and exercise at reoccuring times throughout our days and weeks.
-```{r, echo=T}
 
-```
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
